@@ -30,6 +30,12 @@ class Tutorial {
       var offset = _capturePositionWidget(element.globalKey);
       var sizeWidget = _getSizeWidget(element.globalKey);
 
+      final wrapperContainer = size.height - (offset.dy + sizeWidget.height);
+      print(offset.dy);
+      print(sizeWidget.height);
+      print(size.height);
+      print(wrapperContainer);
+
       entrys.add(
         OverlayEntry(
           builder: (context) {
@@ -63,6 +69,8 @@ class Tutorial {
                       right: element.right,
                       child: Container(
                         width: size.width * 0.8,
+                        color: Colors.red,
+                        height: wrapperContainer,
                         child: Column(
                           crossAxisAlignment: element.crossAxisAlignment,
                           mainAxisAlignment: element.mainAxisAlignment,
