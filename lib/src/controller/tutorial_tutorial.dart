@@ -1,16 +1,31 @@
 library tutorial;
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:tutorial/src/models/tutorial_itens.dart';
 import 'package:tutorial/src/painter/painter.dart';
 
 class Tutorial {
-  static showTutorial(
-      BuildContext context, List<TutorialItens> children) async {
-    int count = 0;
+  final Stream<void> onTapStream;
+
+  int count = 0;
+  List<OverlayEntry> entrys = [];
+  OverlayState overlayState;
+
+  Tutorial({this.onTapStream}) {
+    onTapStream.listen((event) {
+      entrys[count].remove();
+      count++;
+      if (count != entrys.length) {
+        overlayState.insert(entrys[count]);
+      }
+    });
+  }
+
+  showTutorial(BuildContext context, List<TutorialItens> children) async {
     var size = MediaQuery.of(context).size;
-    OverlayState overlayState = Overlay.of(context);
-    List<OverlayEntry> entrys = [];
+    overlayState = Overlay.of(context);
     children.forEach((element) async {
       var offset = _capturePositionWidget(element.globalKey);
       var sizeWidget = _getSizeWidget(element.globalKey);
@@ -53,20 +68,21 @@ class Tutorial {
                           mainAxisAlignment: element.mainAxisAlignment,
                           children: [
                             ...element.children,
-                            GestureDetector(
-                              child: element.widgetNext ??
-                                  Text(
-                                    "NEXT",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                              onTap: () {
-                                entrys[count].remove();
-                                count++;
-                                if (count != entrys.length) {
-                                  overlayState.insert(entrys[count]);
-                                }
-                              },
-                            ),
+                            if (element.widgetNext != null)
+                              GestureDetector(
+                                child: element.widgetNext ??
+                                    Text(
+                                      "NEXT",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                onTap: () {
+                                  entrys[count].remove();
+                                  count++;
+                                  if (count != entrys.length) {
+                                    overlayState.insert(entrys[count]);
+                                  }
+                                },
+                              ),
                           ],
                         ),
                       ),
