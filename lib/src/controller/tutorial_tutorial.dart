@@ -14,6 +14,7 @@ class Tutorial {
     children.forEach((element) async {
       var offset = _capturePositionWidget(element.globalKey);
       var sizeWidget = _getSizeWidget(element.globalKey);
+
       entrys.add(
         OverlayEntry(
           builder: (context) {
@@ -41,7 +42,7 @@ class Tutorial {
                           height: sizeWidget.height),
                     ),
                     Positioned(
-                      top: element.top,
+                      top: offset.dy + sizeWidget.height,
                       bottom: element.bottom,
                       left: element.left,
                       right: element.right,
